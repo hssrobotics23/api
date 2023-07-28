@@ -10,3 +10,4 @@ starlette
 boto3
 python-Levenshtein
 easyOCR
+openai~=0.27.8
