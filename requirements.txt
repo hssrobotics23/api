@@ -3,11 +3,11 @@ scikit-learn
 fastapi
 uvicorn
 python-multipart
+tensorflow
 python-dotenv
-Pillow~=10.0.0
+Pillow==9.5.0
 starlette
-boto3~=1.28.12
-tensorflow==2.13.0
+boto3
 python-Levenshtein
-easyOCR~=1.7.0
+easyOCR
 openai~=0.27.8
