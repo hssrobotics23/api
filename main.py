@@ -4,7 +4,7 @@ import time
 
 import mlflow.keras
 import numpy as np
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Request
 import boto3
 from mlflow.tracking import MlflowClient
 from starlette.middleware.cors import CORSMiddleware
@@ -12,6 +12,7 @@ import easyocr
 
 import api.settings as settings
 from api.utils import read_imagefile, split_s3_bucket_key, get_ocr_matches
+from api.recipe import spice_to_recipe
 
 app = FastAPI()
 
@@ -125,3 +126,21 @@ async def predict(file: UploadFile = File(...)):
 
     print(class_index)
     return {"prediction": class_index, "ocr_matches": ocr_matches}
+
+@app.post("/recipe")
+async def recipe(req : Request):
+    """Provides a recipe based on suggested spices."""
+    req_data = await req.json()
+    spices = req_data.get("spices", [])
+    openai_key = settings.OPENAI_KEY
+    no_recipe = {
+        "title": "",
+        "recipe": "",
+        "spices": spices,
+        "ingredients": []
+    }
+    recipe = (
+        no_recipe if len(spices) < 1 else spice_to_recipe(spices, openai_key)
+    )
+
+    return recipe 
